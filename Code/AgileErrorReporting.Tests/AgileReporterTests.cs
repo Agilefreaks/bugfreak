@@ -10,6 +10,8 @@ namespace AgileErrorReporting.Tests
     {
         private Mock<IErrorReportQueue> _mockErrorQueue;
         private Mock<IServiceProvider> _mockServiceProvider;
+        private Mock<IErrorReportHandler> _mockErrorReportHandler;
+        private Mock<IErrorReportQueueListener> _mockErrorReportQueueListener;
 
         [SetUp]
         public void SetUp()
@@ -20,9 +22,15 @@ namespace AgileErrorReporting.Tests
             AgileReporter.Init();
 
             _mockErrorQueue = new Mock<IErrorReportQueue>();
+            _mockErrorReportHandler = new Mock<IErrorReportHandler>();
+            _mockErrorReportQueueListener = new Mock<IErrorReportQueueListener>();
             _mockServiceProvider = new Mock<IServiceProvider>();
             _mockServiceProvider.Setup(m => m.GetService(typeof(IErrorReportQueue)))
                                 .Returns(_mockErrorQueue.Object);
+            _mockServiceProvider.Setup(m => m.GetService(typeof(IErrorReportHandler)))
+                                .Returns(_mockErrorReportHandler.Object);
+            _mockServiceProvider.Setup(m => m.GetService(typeof(IErrorReportQueueListener)))
+                                .Returns(_mockErrorReportQueueListener.Object);
 
             GlobalConfig.ServiceProvider = _mockServiceProvider.Object;
         }
@@ -109,11 +117,49 @@ namespace AgileErrorReporting.Tests
         }
 
         [Test]
+        public void Init_Always_SetsDefaultErrorQueueListener()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(IErrorReportQueueListener)) is ErrorReportQueueListener);
+        }
+
+        [Test]
+        public void Init_Always_SetsDefaultErrorHandler()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(IErrorReportHandler)) is ErrorReportHandler);
+        }
+
+        [Test]
         public void BeginRequest_Always_CallsReportQueueEnqueue()
         {
             AgileReporter.Instance.BeginReport(new Exception());
 
             _mockErrorQueue.Verify(m => m.Enqueue(It.IsAny<ErrorReport>()));
+        }
+
+        [Test]
+        public void Dispose_Always_CallsHandlerDispose()
+        {
+            AgileReporter.Dispose();
+
+            _mockErrorReportHandler.Verify(m => m.Dispose());
+        }
+
+        [Test]
+        public void Dispose_Always_CallsListenerDispose()
+        {
+            AgileReporter.Dispose();
+
+            _mockErrorReportQueueListener.Verify(m => m.Dispose());
         }
     }
 }

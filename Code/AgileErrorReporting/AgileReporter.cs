@@ -33,6 +33,9 @@ namespace AgileErrorReporting
 
         public static void Dispose()
         {
+            GlobalConfig.ServiceProvider.GetService<IErrorReportQueueListener>().Dispose();
+            GlobalConfig.ServiceProvider.GetService<IErrorReportHandler>().Dispose();
+
             Instance = null;
         }
     }

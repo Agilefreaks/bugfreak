@@ -28,18 +28,27 @@ namespace AgileErrorReporting.Components
         {
             var serviceContainer = new ServiceContainer();
 
-            RegisterComponents(serviceContainer);
-
-            GlobalConfig.ErrorReportSerializer = new FormErrorReportSerializer();
             GlobalConfig.ServiceProvider = serviceContainer;
+            GlobalConfig.ErrorReportSerializer = new FormErrorReportSerializer();
+
+            RegisterComponents(serviceContainer);
         }
 
         private static void RegisterComponents(ServiceContainer serviceContainer)
         {
-            serviceContainer.AddService(typeof(IRemoteErrorReportStorage), (container, type) => new RemoteErrorReportStorage());
-            serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
+            var errorReportQueue = new ErrorReportQueue();
             serviceContainer.AddService(typeof(IErrorReportSerializer), (container, type) => GlobalConfig.ErrorReportSerializer);
-            serviceContainer.AddService(typeof(IErrorReportQueue), new ErrorReportQueue());
+            serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
+            serviceContainer.AddService(typeof(IRemoteErrorReportStorage), (container, type) => new RemoteErrorReportStorage());
+            serviceContainer.AddService(typeof(IErrorReportQueue), errorReportQueue);
+
+            var errorHandler = new ErrorReportHandler();
+            serviceContainer.AddService(typeof(IErrorReportHandler), errorHandler);
+
+            var errorQueueListener = new ErrorReportQueueListener();
+            serviceContainer.AddService(typeof(IErrorReportQueueListener), errorQueueListener);
+
+            errorQueueListener.Listen(errorReportQueue);
         }
 
         private static void InitReporter()
