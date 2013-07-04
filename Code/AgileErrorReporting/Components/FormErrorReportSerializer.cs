@@ -1,6 +1,6 @@
 ﻿using System.Text;
 
-namespace AgileErrorReporting
+namespace AgileErrorReporting.Components
 {
     public class FormErrorReportSerializer : IErrorReportSerializer
     {

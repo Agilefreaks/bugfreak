@@ -2,7 +2,7 @@
 using System.Net;
 using AgileErrorReporting.Utils;
 
-namespace AgileErrorReporting
+namespace AgileErrorReporting.Components
 {
     public class ReportRequestBuilder : IReportRequestBuilder
     {

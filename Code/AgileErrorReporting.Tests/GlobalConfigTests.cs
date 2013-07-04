@@ -1,4 +1,5 @@
-﻿using NUnit.Framework;
+﻿using AgileErrorReporting.Components;
+using NUnit.Framework;
 
 namespace AgileErrorReporting.Tests
 {

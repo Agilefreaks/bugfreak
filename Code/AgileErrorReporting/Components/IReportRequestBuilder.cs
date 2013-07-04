@@ -1,6 +1,6 @@
 ﻿using System.Net;
 
-namespace AgileErrorReporting
+namespace AgileErrorReporting.Components
 {
     public interface IReportRequestBuilder
     {

@@ -1,4 +1,4 @@
-﻿namespace AgileErrorReporting
+﻿namespace AgileErrorReporting.Components
 {
     public interface IErrorReportQueue
     {

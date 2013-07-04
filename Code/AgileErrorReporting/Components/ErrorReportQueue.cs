@@ -1,6 +1,6 @@
 ﻿using AgileErrorReporting.Collections;
 
-namespace AgileErrorReporting
+namespace AgileErrorReporting.Components
 {
     public class ErrorReportQueue : ObservableList<ErrorReport>, IErrorReportQueue
     {

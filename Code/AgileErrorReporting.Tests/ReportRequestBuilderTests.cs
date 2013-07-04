@@ -1,4 +1,5 @@
 ﻿using System;
+using AgileErrorReporting.Components;
 using Moq;
 using NUnit.Framework;
 

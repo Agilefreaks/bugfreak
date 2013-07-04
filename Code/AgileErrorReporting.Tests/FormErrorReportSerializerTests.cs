@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using AgileErrorReporting.Components;
 using NUnit.Framework;
 
 namespace AgileErrorReporting.Tests

@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using AgileErrorReporting.Components;
 
 namespace AgileErrorReporting
 {

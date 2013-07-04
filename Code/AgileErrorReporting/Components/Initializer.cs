@@ -1,7 +1,7 @@
 ﻿using System;
 using System.ComponentModel.Design;
 
-namespace AgileErrorReporting
+namespace AgileErrorReporting.Components
 {
     internal class Initializer
     {
