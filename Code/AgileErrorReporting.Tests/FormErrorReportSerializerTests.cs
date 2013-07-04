@@ -27,7 +27,7 @@ namespace AgileErrorReporting.Tests
 
             var result = _subject.Serialize(errorReport);
 
-            Assert.AreEqual("message=test message&source=source&stackTrace=stack trace", result);
+            Assert.AreEqual("message=test%20message&source=source&stackTrace=stack%20trace", result);
         }
 
         [Test]
@@ -58,7 +58,7 @@ namespace AgileErrorReporting.Tests
 
             var result = _subject.Serialize(errorReport);
 
-            Assert.AreEqual("message=test message&source=source&stackTrace=stack trace&OS=4.2", result);
+            Assert.AreEqual("message=test%20message&source=source&stackTrace=stack%20trace&OS=4.2", result);
         }
     }
 }
