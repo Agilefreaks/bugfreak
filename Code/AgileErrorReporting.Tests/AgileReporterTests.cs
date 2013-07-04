@@ -31,7 +31,7 @@ namespace AgileErrorReporting.Tests
         {
             if (AgileReporter.Instance != null)
             {
-                AgileReporter.Instance.Dispose();
+                AgileReporter.Dispose();
             }
 
             GlobalConfig.ServiceProvider = null;
@@ -57,14 +57,13 @@ namespace AgileErrorReporting.Tests
         }
 
         [Test]
-        public void Instance_AfterCallingDisposeOnCurrentInstance_ReturnsNewInstance()
+        public void Instance_AfterCallingDisposeOnCurrentInstance_ReturnsNull()
         {
-            var instance1 = AgileReporter.Instance;
-            instance1.Dispose();
+            AgileReporter.Dispose();
 
-            var instance2 = AgileReporter.Instance;
+            var instance = AgileReporter.Instance;
 
-            Assert.AreNotSame(instance1, instance2);
+            Assert.IsNull(instance);
         }
 
         [Test]
@@ -84,6 +83,17 @@ namespace AgileErrorReporting.Tests
             GlobalConfig.Settings.AppName = null;
 
             AgileReporter.Init();
+        }
+
+        [Test]
+        public void Init_Always_SetsSerializerToFormSerializer()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ErrorReportSerializer is FormErrorReportSerializer);
         }
 
         [Test]

@@ -16,6 +16,9 @@ namespace AgileErrorReporting.Tests
         [SetUp]
         public void SetUp()
         {
+
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "appName";
             GlobalConfig.Settings.ServiceEndPoint = "http://global-endpoint.com";
             
             _mockSerializer = new Mock<IErrorReportSerializer>();
@@ -35,12 +38,8 @@ namespace AgileErrorReporting.Tests
         {   
             if (AgileReporter.Instance != null)
             {
-                AgileReporter.Instance.Dispose();
+                AgileReporter.Dispose();
             }
-
-            GlobalConfig.Settings.InstanceIdentifier = "user-token";
-            GlobalConfig.Settings.AppName = "appName";
-            GlobalConfig.Settings.ServiceEndPoint = "http://endpoint.com";
         }
 
         [Test]

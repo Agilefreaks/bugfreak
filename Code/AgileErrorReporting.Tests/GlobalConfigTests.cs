@@ -54,5 +54,15 @@ namespace AgileErrorReporting.Tests
 
             Assert.AreSame(instance1, instance2);
         }
+
+        [Test]
+        public void ServiceProvider_GetServiceOfTypeIErrorReportSerializer_ReturnsInstanceFromGlobalConfigSerializer()
+        {
+            var serializer = GlobalConfig.ErrorReportSerializer;
+
+            var instance = GlobalConfig.ServiceProvider.GetService(typeof (IErrorReportSerializer));
+
+            Assert.AreSame(serializer, instance);
+        }
     }
 }

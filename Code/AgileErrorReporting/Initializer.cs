@@ -30,12 +30,14 @@ namespace AgileErrorReporting
 
             RegisterComponents(serviceContainer);
 
+            GlobalConfig.ErrorReportSerializer = new FormErrorReportSerializer();
             GlobalConfig.ServiceProvider = serviceContainer;
         }
 
         private static void RegisterComponents(ServiceContainer serviceContainer)
         {
             serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
+            serviceContainer.AddService(typeof(IErrorReportSerializer), (container, type) => GlobalConfig.ErrorReportSerializer);
             serviceContainer.AddService(typeof(IErrorReportQueue), new ErrorReportQueue());
         }
 

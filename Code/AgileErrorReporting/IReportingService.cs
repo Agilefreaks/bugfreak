@@ -2,7 +2,7 @@
 
 namespace AgileErrorReporting
 {
-    public interface IReportingService : IDisposable
+    public interface IReportingService
     {
         void BeginReport(Exception exc);
     }

@@ -30,7 +30,7 @@ namespace AgileErrorReporting
             errorReportQueue.Enqueue(errorReport);
         }
 
-        public void Dispose()
+        public static void Dispose()
         {
             Instance = null;
         }

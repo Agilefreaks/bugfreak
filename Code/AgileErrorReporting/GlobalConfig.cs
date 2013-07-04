@@ -15,5 +15,7 @@ namespace AgileErrorReporting
         }
 
         public static IServiceProvider ServiceProvider { get; set; }
+
+        public static IErrorReportSerializer ErrorReportSerializer { get; set; }
     }
 }
