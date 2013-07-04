@@ -139,6 +139,17 @@ namespace AgileErrorReporting.Tests
         }
 
         [Test]
+        public void Init_Always_SetsDefaultLocalErrorReportStorage()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(ILocalErrorReportStorage)) is LocalErrorReportStorage);
+        }
+
+        [Test]
         public void BeginRequest_Always_CallsReportQueueEnqueue()
         {
             AgileReporter.Instance.BeginReport(new Exception());

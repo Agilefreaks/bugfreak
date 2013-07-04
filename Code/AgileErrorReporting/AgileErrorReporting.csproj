@@ -47,6 +47,7 @@
     <Compile Include="Components\IErrorReportStorage.cs" />
     <Compile Include="Components\ILocalErrorReportStorage.cs" />
     <Compile Include="Components\IRemoteErrorReportStorage.cs" />
+    <Compile Include="Components\LocalErrorReportStorage.cs" />
     <Compile Include="Components\RemoteErrorReportStorage.cs" />
     <Compile Include="ErrorReport.cs" />
     <Compile Include="Components\ErrorReportQueue.cs" />

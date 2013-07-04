@@ -40,6 +40,7 @@ namespace AgileErrorReporting.Components
             serviceContainer.AddService(typeof(IErrorReportSerializer), (container, type) => GlobalConfig.ErrorReportSerializer);
             serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
             serviceContainer.AddService(typeof(IRemoteErrorReportStorage), (container, type) => new RemoteErrorReportStorage());
+            serviceContainer.AddService(typeof(ILocalErrorReportStorage), (container, type) => new LocalErrorReportStorage());
             serviceContainer.AddService(typeof(IErrorReportQueue), errorReportQueue);
 
             var errorHandler = new ErrorReportHandler();
