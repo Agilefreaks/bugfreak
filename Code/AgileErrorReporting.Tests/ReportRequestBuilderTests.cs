@@ -1,4 +1,5 @@
 ﻿using System;
+using System.IO;
 using System.Net;
 using AgileErrorReporting.Components;
 using Moq;
@@ -13,21 +14,32 @@ namespace AgileErrorReporting.Tests
 
         private Mock<IServiceProvider> _mockServiceProvider;
         private Mock<IErrorReportSerializer> _mockSerializer;
+        private Mock<IWebRequestCreate> _mockWebRequestFactory;
+        private Mock<WebRequest> _mockWebRequest;
+        private MemoryStream _stream;
         private ReportRequestBuilder _subject;
 
         [SetUp]
         public void SetUp()
         {
-
             GlobalConfig.Settings.InstanceIdentifier = "user-token";
             GlobalConfig.Settings.AppName = "appName";
             GlobalConfig.Settings.ServiceEndPoint = "http://global-endpoint.com";
             
             _mockSerializer = new Mock<IErrorReportSerializer>();
+            _mockWebRequest = new Mock<WebRequest>();
+            _mockWebRequest.SetupGet(m => m.Headers).Returns(new WebHeaderCollection());
+            _stream = new MemoryStream();
+            _mockWebRequest.Setup(m => m.GetRequestStream()).Returns(_stream);
+            _mockWebRequestFactory = new Mock<IWebRequestCreate>();
+            _mockWebRequestFactory.Setup(m => m.Create(It.IsAny<Uri>()))
+                .Returns(_mockWebRequest.Object);
             _mockServiceProvider = new Mock<IServiceProvider>();
             GlobalConfig.ServiceProvider = _mockServiceProvider.Object;
             _mockServiceProvider.Setup(m => m.GetService(typeof (IErrorReportSerializer)))
                                 .Returns(_mockSerializer.Object);
+            _mockServiceProvider.Setup(m => m.GetService(typeof (IWebRequestCreate)))
+                                .Returns(_mockWebRequestFactory.Object);
 
             _mockSerializer.Setup(m => m.Serialize(It.IsAny<ErrorReport>()))
                            .Returns(SERIALIZER_OUTPUT);
@@ -52,7 +64,7 @@ namespace AgileErrorReporting.Tests
             var result = _subject.Build(new ErrorReport());
             result.Abort();
             
-            Assert.AreEqual("http://endpoint.com", result.RequestUri.OriginalString);
+            _mockWebRequestFactory.Verify(m => m.Create(It.Is<Uri>(u => u.OriginalString == "http://endpoint.com")));
         }
 
         [Test]
@@ -60,8 +72,8 @@ namespace AgileErrorReporting.Tests
         {
             var result = _subject.Build(new ErrorReport());
             result.Abort();
-            
-            Assert.AreEqual("POST", result.Method);
+
+            _mockWebRequest.VerifySet(m => m.Method, "POST");
         }
 
         [Test]
@@ -76,13 +88,16 @@ namespace AgileErrorReporting.Tests
         }
 
         [Test]
-        public void Build_Always_SetsUserAgentToAppName()
+        public void Build_Always_WritesContentToStream()
         {
-            GlobalConfig.Settings.AppName = "appName";
+            var errorReport = new ErrorReport();
+            _mockSerializer.Setup(m => m.Serialize(errorReport))
+                           .Returns(SERIALIZER_OUTPUT);
 
-            var result = _subject.Build(new ErrorReport());
+            var result = _subject.Build(errorReport);
+            result.Abort();
 
-            Assert.AreEqual(GlobalConfig.Settings.AppName, result.Headers[HttpRequestHeader.UserAgent]);
+            Assert.AreEqual(SERIALIZER_OUTPUT, new StreamReader(_stream).ReadToEnd());
         }
 
         [Test]
@@ -92,15 +107,6 @@ namespace AgileErrorReporting.Tests
             result.Abort();
             
             _mockSerializer.Verify(m => m.Serialize(It.IsAny<ErrorReport>()));
-        }
-
-        [Test]
-        public void Build_Always_SetsContentLength()
-        {
-            var result = _subject.Build(new ErrorReport());
-            result.Abort();
-
-            Assert.AreEqual(SERIALIZER_OUTPUT.Length, result.ContentLength);
         }
     }
 }

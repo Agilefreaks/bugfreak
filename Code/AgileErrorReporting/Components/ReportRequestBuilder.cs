@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 using System.Net;
 using AgileErrorReporting.Utils;
 
@@ -8,6 +9,13 @@ namespace AgileErrorReporting.Components
     {
         public const string InstanceIdentifierKey = "apiKey";
         public const string HttpMethod = "POST";
+
+        private readonly IWebRequestCreate _webRequestFactory;
+
+        public ReportRequestBuilder()
+        {
+            _webRequestFactory = GlobalConfig.ServiceProvider.GetService<IWebRequestCreate>();
+        }
 
         public WebRequest Build(ErrorReport report)
         {
@@ -20,43 +28,46 @@ namespace AgileErrorReporting.Components
             return request;
         }
 
-        private HttpWebRequest CreateRequest()
+        private WebRequest CreateRequest()
         {
-            return (HttpWebRequest) WebRequest.Create(GlobalConfig.Settings.ServiceEndPoint);
+            return _webRequestFactory.Create(new Uri(GlobalConfig.Settings.ServiceEndPoint));
         }
 
-        private void SetMethod(HttpWebRequest request)
+        private void SetMethod(WebRequest request)
         {
             request.Method = HttpMethod;
         }
 
-        private void Sign(HttpWebRequest request)
+        private void Sign(WebRequest request)
         {
             request.Headers.Add(InstanceIdentifierKey, GlobalConfig.Settings.InstanceIdentifier);
         }
 
-        private void SetAgent(HttpWebRequest request)
+        private void SetAgent(WebRequest request)
         {
-            request.UserAgent = GlobalConfig.Settings.AppName;
+            var httpRequest = request as HttpWebRequest;
+
+            if (httpRequest != null)
+            {
+                httpRequest.UserAgent = GlobalConfig.Settings.AppName;
+            }
         }
 
-        private void Write(ErrorReport report, HttpWebRequest request)
+        private void Write(ErrorReport report, WebRequest request)
         {
             var serializer = GlobalConfig.ServiceProvider.GetService<IErrorReportSerializer>();
 
             var serializedObj = serializer.Serialize(report);
 
-            using (var outputStream = request.GetRequestStream())
-            {
-                using (var writer = new StreamWriter(outputStream))
-                {
-                    writer.Write(serializedObj);
-                    writer.Flush();
-                    writer.Close();
-                }
+            var outputStream = request.GetRequestStream();
+            var writer = new StreamWriter(outputStream);
 
-                outputStream.Flush();
-                outputStream.Close();
+            writer.Write(serializedObj);
+            writer.Flush();
+
+            if (outputStream.CanSeek)
+            {
+                outputStream.Seek(0, SeekOrigin.Begin);
             }
         }
     }

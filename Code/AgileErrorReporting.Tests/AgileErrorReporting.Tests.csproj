@@ -57,6 +57,7 @@
     <Compile Include="RemoteErrorReportStorageTests.cs" />
     <Compile Include="ReportRequestBuilderTests.cs" />
     <Compile Include="ServiceProviderExtensionsTests.cs" />
+    <Compile Include="WebRequestFactoryTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="packages.config" />

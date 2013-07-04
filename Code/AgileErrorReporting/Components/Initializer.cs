@@ -1,5 +1,6 @@
 ﻿using System;
 using System.ComponentModel.Design;
+using System.Net;
 
 namespace AgileErrorReporting.Components
 {
@@ -37,6 +38,7 @@ namespace AgileErrorReporting.Components
         private static void RegisterComponents(ServiceContainer serviceContainer)
         {
             var errorReportQueue = new ErrorReportQueue();
+            serviceContainer.AddService(typeof(IWebRequestCreate), new WebRequestFactory());
             serviceContainer.AddService(typeof(IErrorReportSerializer), (container, type) => GlobalConfig.ErrorReportSerializer);
             serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
             serviceContainer.AddService(typeof(IRemoteErrorReportStorage), (container, type) => new RemoteErrorReportStorage());

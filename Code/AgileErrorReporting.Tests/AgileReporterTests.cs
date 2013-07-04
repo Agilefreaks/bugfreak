@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using AgileErrorReporting.Components;
 using Moq;
 using NUnit.Framework;
@@ -147,6 +148,17 @@ namespace AgileErrorReporting.Tests
             AgileReporter.Init();
 
             Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(ILocalErrorReportStorage)) is LocalErrorReportStorage);
+        }
+
+        [Test]
+        public void Init_Always_SetsDefaultWebRequestCreate()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(IWebRequestCreate)) is WebRequestFactory);
         }
 
         [Test]

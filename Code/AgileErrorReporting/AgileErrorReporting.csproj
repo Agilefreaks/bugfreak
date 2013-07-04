@@ -49,6 +49,7 @@
     <Compile Include="Components\IRemoteErrorReportStorage.cs" />
     <Compile Include="Components\LocalErrorReportStorage.cs" />
     <Compile Include="Components\RemoteErrorReportStorage.cs" />
+    <Compile Include="Components\WebRequestFactory.cs" />
     <Compile Include="ErrorReport.cs" />
     <Compile Include="Components\ErrorReportQueue.cs" />
     <Compile Include="Components\FormErrorReportSerializer.cs" />
