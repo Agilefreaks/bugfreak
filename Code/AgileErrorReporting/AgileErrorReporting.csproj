@@ -38,6 +38,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="AgileReporter.cs" />
     <Compile Include="ErrorReport.cs" />
     <Compile Include="IReportingService.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
