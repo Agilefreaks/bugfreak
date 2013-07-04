@@ -42,6 +42,7 @@
     <Compile Include="ErrorReport.cs" />
     <Compile Include="ErrorReportQueue.cs" />
     <Compile Include="IErrorReportQueue.cs" />
+    <Compile Include="Initializer.cs" />
     <Compile Include="IReportingService.cs" />
     <Compile Include="IReportRequestBuilder.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

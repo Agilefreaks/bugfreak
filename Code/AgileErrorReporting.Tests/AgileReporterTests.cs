@@ -7,7 +7,7 @@ namespace AgileErrorReporting.Tests
     [TestFixture]
     public class AgileReporterTests
     {
-        private Mock<IReportRequestBuilder> _mockReportRequestFactory;
+        private Mock<IErrorReportQueue> _mockErrorQueue;
         private Mock<IServiceProvider> _mockServiceProvider;
 
         [SetUp]
@@ -16,10 +16,12 @@ namespace AgileErrorReporting.Tests
             GlobalConfig.Settings.InstanceIdentifier = "user-token";
             GlobalConfig.Settings.AppName = "appName";
 
-            _mockReportRequestFactory = new Mock<IReportRequestBuilder>();
+            AgileReporter.Init();
+
+            _mockErrorQueue = new Mock<IErrorReportQueue>();
             _mockServiceProvider = new Mock<IServiceProvider>();
-            _mockServiceProvider.Setup(m => m.GetService(typeof (IReportRequestBuilder)))
-                                .Returns(_mockReportRequestFactory.Object);
+            _mockServiceProvider.Setup(m => m.GetService(typeof(IErrorReportQueue)))
+                                .Returns(_mockErrorQueue.Object);
 
             GlobalConfig.ServiceProvider = _mockServiceProvider.Object;
         }
@@ -27,11 +29,14 @@ namespace AgileErrorReporting.Tests
         [TearDown]
         public void TearDown()
         {
-            GlobalConfig.Settings.InstanceIdentifier = "user-token";
-            GlobalConfig.Settings.AppName = "appName";
-            AgileReporter.Instance.Dispose();
+            if (AgileReporter.Instance != null)
+            {
+                AgileReporter.Instance.Dispose();
+            }
 
             GlobalConfig.ServiceProvider = null;
+            GlobalConfig.Settings.InstanceIdentifier = null;
+            GlobalConfig.Settings.AppName = null;
         }
 
         [Test]
@@ -64,29 +69,29 @@ namespace AgileErrorReporting.Tests
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void Instance_WhenApiKeyIsNotSet_RaisesArgumentException()
+        public void Init_WhenApiKeyIsNotSet_RaisesArgumentException()
         {
             GlobalConfig.Settings.InstanceIdentifier = null;
 
-            var instance1 = AgileReporter.Instance;
+            AgileReporter.Init();
         }
 
         [Test]
         [ExpectedException(typeof(ArgumentException))]
-        public void Instance_WhenAppNameIsNotSet_RaisesArgumentException()
+        public void Init_WhenAppNameIsNotSet_RaisesArgumentException()
         {
             GlobalConfig.Settings.InstanceIdentifier = "user-token";
             GlobalConfig.Settings.AppName = null;
 
-            var instance = AgileReporter.Instance;
+            AgileReporter.Init();
         }
 
         [Test]
-        public void BeginRequest_Always_CallsReportFactoryCreate()
+        public void BeginRequest_Always_CallsReportQueueEnqueue()
         {
             AgileReporter.Instance.BeginReport(new Exception());
 
-            _mockServiceProvider.Verify(m => m.GetService(typeof(IReportRequestBuilder)));
+            _mockErrorQueue.Verify(m => m.Enqueue(It.IsAny<ErrorReport>()));
         }
     }
 }
