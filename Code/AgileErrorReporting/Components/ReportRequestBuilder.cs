@@ -9,7 +9,7 @@ namespace AgileErrorReporting.Components
         public const string InstanceIdentifierKey = "apiKey";
         public const string HttpMethod = "POST";
 
-        public HttpWebRequest Build(ErrorReport report)
+        public WebRequest Build(ErrorReport report)
         {
             var request = CreateRequest();
             SetMethod(request);

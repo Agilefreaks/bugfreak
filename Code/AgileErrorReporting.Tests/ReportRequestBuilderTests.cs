@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using AgileErrorReporting.Components;
 using Moq;
 using NUnit.Framework;
@@ -81,7 +82,7 @@ namespace AgileErrorReporting.Tests
 
             var result = _subject.Build(new ErrorReport());
 
-            Assert.AreEqual(GlobalConfig.Settings.AppName, result.UserAgent);
+            Assert.AreEqual(GlobalConfig.Settings.AppName, result.Headers[HttpRequestHeader.UserAgent]);
         }
 
         [Test]
