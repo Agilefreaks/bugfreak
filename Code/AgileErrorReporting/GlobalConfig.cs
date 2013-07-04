@@ -25,9 +25,15 @@ namespace AgileErrorReporting
         {
             var serviceContainer = new ServiceContainer();
 
-            serviceContainer.AddService(typeof(IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
+            RegisterComponents(serviceContainer);
 
             return serviceContainer;
+        }
+
+        private static void RegisterComponents(ServiceContainer serviceContainer)
+        {
+            serviceContainer.AddService(typeof (IReportRequestBuilder), (container, type) => new ReportRequestBuilder());
+            serviceContainer.AddService(typeof (IErrorReportQueue), new ErrorReportQueue());
         }
     }
 }

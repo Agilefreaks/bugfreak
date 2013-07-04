@@ -6,6 +6,8 @@ namespace AgileErrorReporting
     public class AgileReporter : IReportingService
     {
         private static AgileReporter _instance;
+        private readonly IErrorReportQueue _errorReportQueue;
+
         public static IReportingService Instance
         {
             get
@@ -14,8 +16,6 @@ namespace AgileErrorReporting
             }
         }
 
-        private readonly IReportRequestBuilder _reportRequestBuilder;
-        
         private AgileReporter()
         {
             if (string.IsNullOrEmpty(GlobalConfig.Settings.InstanceIdentifier))
@@ -27,12 +27,23 @@ namespace AgileErrorReporting
                 throw new ArgumentException("AppName not set");
             }
 
-            _reportRequestBuilder = GlobalConfig.ServiceProvider.GetService<IReportRequestBuilder>();
+            _errorReportQueue = GlobalConfig.ServiceProvider.GetService<IErrorReportQueue>();
         }
 
         public void BeginReport(Exception exc)
         {
-            var request = _reportRequestBuilder.Build();
+            var errorReport = CreateReport(exc);
+            Queue(errorReport);
+        }
+
+        private ErrorReport CreateReport(Exception exc)
+        {
+            return ErrorReport.FromException(exc);
+        }
+
+        private void Queue(ErrorReport errorReport)
+        {
+            _errorReportQueue.Enqueue(errorReport);
         }
 
         public void Dispose()
