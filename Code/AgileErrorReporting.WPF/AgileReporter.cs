@@ -1,4 +1,5 @@
-﻿using System.Windows;
+﻿using System;
+using System.Windows;
 using System.Windows.Threading;
 
 namespace AgileErrorReporting.WPF
@@ -9,6 +10,7 @@ namespace AgileErrorReporting.WPF
         {
             var app = Application.Current;
 
+            GlobalConfig.Settings.AppName = AppDomain.CurrentDomain.FriendlyName;
             AgileErrorReporting.AgileReporter.Init();
             app.Exit += OnExit;
             app.DispatcherUnhandledException += OnException;
