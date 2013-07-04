@@ -1,4 +1,5 @@
 ﻿using System;
+using Moq;
 using NUnit.Framework;
 
 namespace AgileErrorReporting.Tests
@@ -6,11 +7,21 @@ namespace AgileErrorReporting.Tests
     [TestFixture]
     public class AgileReporterTests
     {
+        private Mock<IReportRequestBuilder> _mockReportRequestFactory;
+        private Mock<IServiceProvider> _mockServiceProvider;
+
         [SetUp]
         public void SetUp()
         {
             GlobalConfig.Settings.InstanceIdentifier = "user-token";
             GlobalConfig.Settings.AppName = "appName";
+
+            _mockReportRequestFactory = new Mock<IReportRequestBuilder>();
+            _mockServiceProvider = new Mock<IServiceProvider>();
+            _mockServiceProvider.Setup(m => m.GetService(typeof (IReportRequestBuilder)))
+                                .Returns(_mockReportRequestFactory.Object);
+
+            GlobalConfig.ServiceProvider = _mockServiceProvider.Object;
         }
 
         [TearDown]
@@ -68,6 +79,14 @@ namespace AgileErrorReporting.Tests
             GlobalConfig.Settings.AppName = null;
 
             var instance = AgileReporter.Instance;
+        }
+
+        [Test]
+        public void BeginRequest_Always_CallsReportFactoryCreate()
+        {
+            AgileReporter.Instance.BeginReport(new Exception());
+
+            _mockServiceProvider.Verify(m => m.GetService(typeof(IReportRequestBuilder)));
         }
     }
 }

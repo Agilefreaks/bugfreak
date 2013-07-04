@@ -50,6 +50,7 @@
     <Compile Include="ErrorReportTests.cs" />
     <Compile Include="GlobalConfigTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="ReportRequestBuilderTests.cs" />
     <Compile Include="ServiceProviderExtensionsTests.cs" />
   </ItemGroup>
   <ItemGroup>

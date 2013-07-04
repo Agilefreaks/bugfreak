@@ -1,4 +1,5 @@
 ﻿using System;
+using AgileErrorReporting.Utils;
 
 namespace AgileErrorReporting
 {
@@ -13,6 +14,8 @@ namespace AgileErrorReporting
             }
         }
 
+        private readonly IReportRequestBuilder _reportRequestBuilder;
+        
         private AgileReporter()
         {
             if (string.IsNullOrEmpty(GlobalConfig.Settings.InstanceIdentifier))
@@ -23,10 +26,13 @@ namespace AgileErrorReporting
             {
                 throw new ArgumentException("AppName not set");
             }
+
+            _reportRequestBuilder = GlobalConfig.ServiceProvider.GetService<IReportRequestBuilder>();
         }
 
         public void BeginReport(Exception exc)
         {
+            var request = _reportRequestBuilder.Build();
         }
 
         public void Dispose()
