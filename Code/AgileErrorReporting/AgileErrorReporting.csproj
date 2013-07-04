@@ -40,6 +40,9 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgileReporter.cs" />
+    <Compile Include="Components\IErrorReportStorage.cs" />
+    <Compile Include="Components\IRemoteErrorReportStorage.cs" />
+    <Compile Include="Components\RemoteErrorReportStorage.cs" />
     <Compile Include="ErrorReport.cs" />
     <Compile Include="Components\ErrorReportQueue.cs" />
     <Compile Include="Components\FormErrorReportSerializer.cs" />

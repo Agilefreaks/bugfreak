@@ -98,6 +98,17 @@ namespace AgileErrorReporting.Tests
         }
 
         [Test]
+        public void Init_Always_SetsDefaultIRemoteErrorReportStorage()
+        {
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "app";
+
+            AgileReporter.Init();
+
+            Assert.IsTrue(GlobalConfig.ServiceProvider.GetService(typeof(IRemoteErrorReportStorage)) is RemoteErrorReportStorage);
+        }
+
+        [Test]
         public void BeginRequest_Always_CallsReportQueueEnqueue()
         {
             AgileReporter.Instance.BeginReport(new Exception());
