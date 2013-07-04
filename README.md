@@ -1,1 +1,5 @@
-Agile Error Reporting
+BugFreak
+========
+
+A bug tracking framework for all the other frameworks
+
