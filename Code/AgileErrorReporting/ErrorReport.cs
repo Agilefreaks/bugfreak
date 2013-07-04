@@ -14,6 +14,11 @@ namespace AgileErrorReporting
 
         public List<KeyValuePair<string, string>> AdditionalData { get; set; }
 
+        public ErrorReport()
+        {
+            AdditionalData = new List<KeyValuePair<string, string>>();
+        }
+
         public static ErrorReport FromException(Exception exc)
         {
             if (exc == null)

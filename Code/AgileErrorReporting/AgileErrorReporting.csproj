@@ -42,6 +42,7 @@
     <Compile Include="AgileReporter.cs" />
     <Compile Include="ErrorReport.cs" />
     <Compile Include="ErrorReportQueue.cs" />
+    <Compile Include="FormErrorReportSerializer.cs" />
     <Compile Include="IErrorReportQueue.cs" />
     <Compile Include="IErrorReportSerializer.cs" />
     <Compile Include="Initializer.cs" />
