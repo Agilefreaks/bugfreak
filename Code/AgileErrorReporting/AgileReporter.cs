@@ -15,11 +15,11 @@ namespace AgileErrorReporting
 
         private AgileReporter()
         {
-            if (string.IsNullOrEmpty(Settings.InstanceIdentifier))
+            if (string.IsNullOrEmpty(GlobalConfig.Settings.InstanceIdentifier))
             {
                 throw new ArgumentException("Instance identifier not set");
             }
-            if (string.IsNullOrEmpty(Settings.AppName))
+            if (string.IsNullOrEmpty(GlobalConfig.Settings.AppName))
             {
                 throw new ArgumentException("AppName not set");
             }

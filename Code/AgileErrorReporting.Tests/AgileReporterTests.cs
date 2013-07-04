@@ -9,16 +9,18 @@ namespace AgileErrorReporting.Tests
         [SetUp]
         public void SetUp()
         {
-            Settings.InstanceIdentifier = "user-token";
-            Settings.AppName = "appName";
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "appName";
         }
 
         [TearDown]
         public void TearDown()
         {
-            Settings.InstanceIdentifier = "user-token";
-            Settings.AppName = "appName";
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = "appName";
             AgileReporter.Instance.Dispose();
+
+            GlobalConfig.ServiceProvider = null;
         }
 
         [Test]
@@ -53,7 +55,7 @@ namespace AgileErrorReporting.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void Instance_WhenApiKeyIsNotSet_RaisesArgumentException()
         {
-            Settings.InstanceIdentifier = null;
+            GlobalConfig.Settings.InstanceIdentifier = null;
 
             var instance1 = AgileReporter.Instance;
         }
@@ -62,8 +64,8 @@ namespace AgileErrorReporting.Tests
         [ExpectedException(typeof(ArgumentException))]
         public void Instance_WhenAppNameIsNotSet_RaisesArgumentException()
         {
-            Settings.InstanceIdentifier = "user-token";
-            Settings.AppName = null;
+            GlobalConfig.Settings.InstanceIdentifier = "user-token";
+            GlobalConfig.Settings.AppName = null;
 
             var instance = AgileReporter.Instance;
         }
