@@ -43,6 +43,7 @@
     <Compile Include="ErrorReport.cs" />
     <Compile Include="ErrorReportQueue.cs" />
     <Compile Include="IErrorReportQueue.cs" />
+    <Compile Include="IErrorReportSerializer.cs" />
     <Compile Include="Initializer.cs" />
     <Compile Include="IReportingService.cs" />
     <Compile Include="IReportRequestBuilder.cs" />

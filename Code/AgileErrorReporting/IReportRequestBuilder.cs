@@ -4,6 +4,6 @@ namespace AgileErrorReporting
 {
     public interface IReportRequestBuilder
     {
-        HttpWebRequest Build();
+        HttpWebRequest Build(ErrorReport report);
     }
 }
