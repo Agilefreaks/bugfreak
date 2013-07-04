@@ -1,4 +1,5 @@
-﻿using AgileErrorReporting.Collections;
+﻿using System.Linq;
+using AgileErrorReporting.Collections;
 
 namespace AgileErrorReporting.Components
 {
@@ -7,6 +8,18 @@ namespace AgileErrorReporting.Components
         public void Enqueue(ErrorReport errorReport)
         {
             Add(errorReport);
+        }
+
+        public ErrorReport Dequeue()
+        {
+            var item = this.FirstOrDefault();
+
+            if (item != null)
+            {
+                Remove(item);
+            }
+
+            return item;
         }
     }
 }

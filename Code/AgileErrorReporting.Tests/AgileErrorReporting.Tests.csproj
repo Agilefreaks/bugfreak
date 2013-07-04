@@ -47,6 +47,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="AgileReporterTests.cs" />
+    <Compile Include="ErrorReportQueueTests.cs" />
     <Compile Include="ErrorReportTests.cs" />
     <Compile Include="FormErrorReportSerializerTests.cs" />
     <Compile Include="GlobalConfigTests.cs" />
