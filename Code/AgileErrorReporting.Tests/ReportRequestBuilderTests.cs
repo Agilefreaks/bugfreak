@@ -25,7 +25,7 @@ namespace AgileErrorReporting.Tests
             GlobalConfig.Settings.InstanceIdentifier = "user-token";
             GlobalConfig.Settings.AppName = "appName";
             GlobalConfig.Settings.ServiceEndPoint = "http://global-endpoint.com";
-            
+
             _mockSerializer = new Mock<IErrorReportSerializer>();
             _mockWebRequest = new Mock<WebRequest>();
             _mockWebRequest.SetupGet(m => m.Headers).Returns(new WebHeaderCollection());
@@ -36,9 +36,9 @@ namespace AgileErrorReporting.Tests
                 .Returns(_mockWebRequest.Object);
             _mockServiceProvider = new Mock<IServiceProvider>();
             GlobalConfig.ServiceProvider = _mockServiceProvider.Object;
-            _mockServiceProvider.Setup(m => m.GetService(typeof (IErrorReportSerializer)))
+            _mockServiceProvider.Setup(m => m.GetService(typeof(IErrorReportSerializer)))
                                 .Returns(_mockSerializer.Object);
-            _mockServiceProvider.Setup(m => m.GetService(typeof (IWebRequestCreate)))
+            _mockServiceProvider.Setup(m => m.GetService(typeof(IWebRequestCreate)))
                                 .Returns(_mockWebRequestFactory.Object);
 
             _mockSerializer.Setup(m => m.Serialize(It.IsAny<ErrorReport>()))
@@ -49,11 +49,10 @@ namespace AgileErrorReporting.Tests
 
         [TearDown]
         public void TearDown()
-        {   
-            if (AgileReporter.Instance != null)
-            {
-                AgileReporter.Dispose();
-            }
+        {
+            GlobalConfig.Settings.InstanceIdentifier = null;
+            GlobalConfig.Settings.AppName = null;
+            GlobalConfig.Settings.ServiceEndPoint = null;
         }
 
         [Test]
@@ -63,7 +62,7 @@ namespace AgileErrorReporting.Tests
 
             var result = _subject.Build(new ErrorReport());
             result.Abort();
-            
+
             _mockWebRequestFactory.Verify(m => m.Create(It.Is<Uri>(u => u.OriginalString == "http://endpoint.com")));
         }
 
@@ -83,7 +82,7 @@ namespace AgileErrorReporting.Tests
 
             var result = _subject.Build(new ErrorReport());
             result.Abort();
-            
+
             Assert.AreEqual(GlobalConfig.Settings.InstanceIdentifier, result.Headers["apiKey"]);
         }
 
@@ -105,8 +104,19 @@ namespace AgileErrorReporting.Tests
         {
             var result = _subject.Build(new ErrorReport());
             result.Abort();
-            
+
             _mockSerializer.Verify(m => m.Serialize(It.IsAny<ErrorReport>()));
+        }
+
+        [Test]
+        public void Build_Always_SetsContentType()
+        {
+            _mockSerializer.Setup(m => m.GetContentType()).Returns("contentType");
+
+            var resut = _subject.Build(new ErrorReport());
+            resut.Abort();
+
+            _mockWebRequest.VerifySet(m => m.ContentType, "contentType");
         }
     }
 }

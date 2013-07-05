@@ -69,6 +69,8 @@ namespace AgileErrorReporting.Components
             {
                 outputStream.Seek(0, SeekOrigin.Begin);
             }
+
+            request.ContentType = serializer.GetContentType();
         }
     }
 }

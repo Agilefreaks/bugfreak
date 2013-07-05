@@ -3,7 +3,7 @@ using AgileErrorReporting.Utils;
 
 namespace AgileErrorReporting.Components
 {
-    public class RemoteErrorReportStorage  : IRemoteErrorReportStorage
+    public class RemoteErrorReportStorage : IRemoteErrorReportStorage
     {
         private readonly IReportRequestBuilder _reportRequestBuilder;
 
